@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
-// using api.Mappers;
+using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -22,7 +22,10 @@ namespace api.Controllers
         public IActionResult GetAll()
         {
             var stocks = _context.Stocks.ToList();
-            return Ok(stocks);
+
+            // Apply the stock DTO (filter out comments) by using ToStockDto() function
+            var stockDto = stocks.Select(s => s.ToStockDto());
+            return Ok(stockDto);
         }
 
         [HttpGet("{id}")]
@@ -33,7 +36,7 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            return Ok(stock);
+            return Ok(stock.ToStockDto());
         }
     }
 }
